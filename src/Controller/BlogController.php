@@ -8,6 +8,10 @@ use App\Entity\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\ArticleType;
+use App\Form\CategoryType;
+use Symfony\Component\HttpFoundation\Request;
+
 
 class BlogController extends AbstractController
 {
@@ -26,9 +30,14 @@ class BlogController extends AbstractController
             );
         }
 
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
+
+
         return $this->render(
             'blog/index.html.twig',
-            ['articles' => $articles]
+            ['articles' => $articles,
+                'form' => $form->createView()]
         );
     }
 
@@ -82,5 +91,24 @@ class BlogController extends AbstractController
                 'articles' => $category->getArticles(),
             ]
         );
+    }
+    /**
+     * @Route ("/add/category", name="category_add")
+     * @return Response
+     */
+    public function add(Request $request)
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($category);
+            $manager->flush();
+            return $this->redirectToRoute('blog_index');
+        }
+        return $this->render('blog/add.html.twig', [
+            'formCategory' => $form->createView()
+        ]);
     }
 }
