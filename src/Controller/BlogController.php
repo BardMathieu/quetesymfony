@@ -8,7 +8,6 @@ use App\Entity\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\ArticleType;
 use App\Form\CategoryType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -93,15 +92,16 @@ class BlogController extends AbstractController
         );
     }
     /**
-     * @Route ("/add/category", name="category_add")
-     * @return Response
+     * @Route ("/blog/category",
+     *     name="add_category")
      */
     public function add(Request $request)
     {
-        $manager = $this->getDoctrine()->getManager();
+
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
+        $manager = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
             $manager->persist($category);
             $manager->flush();
