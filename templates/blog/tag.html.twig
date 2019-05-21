@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <strong>Tags :</strong>
+    <ul>
+        {% for article in tag.articles %}
+            <li>
+                <a href="{{ path('blog_show', {'slug': article.title|replace({' ':'-'})|lower}) }}">
+                    {{ article.title }}
+                </a>
+            </li>
+        {% else %}
+            <li>No articles for this tag</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

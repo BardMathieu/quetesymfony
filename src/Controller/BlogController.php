@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Entity\Tag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -110,5 +111,21 @@ class BlogController extends AbstractController
         return $this->render('blog/add.html.twig', [
             'formCategory' => $form->createView()
         ]);
+    }
+    /**
+     * @Route ("/blog/tag/{id}", name="category_tag")
+     */
+    public function tag(Tag $tag)
+    {
+        if (!$tag) {
+            throw $this
+                ->createNotFoundException('No tag has been sent to find');
+        }
+        return $this->render(
+            'blog/tag.html.twig',
+            [
+                'tag' => $tag
+            ]
+        );
     }
 }
